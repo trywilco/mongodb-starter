@@ -19,11 +19,41 @@ sudo apt-get install -y mongodb-org
 sudo mkdir -p /data/db
 sudo chown -R vscode:vscode /data/db
 
-# Start MongoDB as a background process with disown to ensure it stays running
-bash -c "mongod --dbpath /data/db > /tmp/mongodb.log 2>&1 & disown"
+# Function to check if MongoDB is already running
+is_mongodb_running() {
+    mongosh --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1
+    return $?
+}
 
-# Wait for MongoDB to start
-sleep 5
+# Function to start MongoDB
+start_mongodb() {
+    # If MongoDB is already running, don't start it again
+    if is_mongodb_running; then
+        echo "MongoDB is already running"
+        return 0
+    fi
+
+    # Clear the log file
+    > /tmp/mongodb.log
+
+    # Start MongoDB with proper options
+    mongod --dbpath /data/db --fork --logpath /tmp/mongodb.log
+
+    # Wait for MongoDB to start and be ready
+    for i in {1..30}; do
+        if is_mongodb_running; then
+            echo "MongoDB started successfully"
+            return 0
+        fi
+        sleep 1
+    done
+
+    echo "MongoDB failed to start within 30 seconds"
+    return 1
+}
+
+# Start MongoDB
+start_mongodb
 
 # Print welcome message
 echo "MongoDB development environment is ready! You can now use 'mongosh' to connect."
