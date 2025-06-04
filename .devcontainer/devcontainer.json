@@ -2,10 +2,7 @@
   "name": "MongoDB Development Container",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/mongodb:1": {
-      "version": "latest"
-    }
+    "ghcr.io/devcontainers/features/common-utils:2": {}
   },
   "forwardPorts": [27017],
   "postCreateCommand": ".devcontainer/setup.sh",
