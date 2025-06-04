@@ -19,28 +19,20 @@ sudo apt-get install -y mongodb-org
 sudo mkdir -p /data/db
 sudo chown -R vscode:vscode /data/db
 
-# Create a systemd service file for MongoDB
-sudo tee /etc/systemd/system/mongodb.service > /dev/null << EOL
-[Unit]
-Description=MongoDB Database Service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/mongod --dbpath /data/db
-User=vscode
-
-[Install]
-WantedBy=multi-user.target
-EOL
-
-# Enable and start MongoDB service
-sudo systemctl daemon-reload
-sudo systemctl enable mongodb
-sudo systemctl start mongodb
+# Start MongoDB as a background process
+nohup mongod --dbpath /data/db &
 
 # Wait for MongoDB to start
 sleep 5
 
 # Print welcome message
 echo "MongoDB development environment is ready! You can now use 'mongosh' to connect."
+
+# Add MongoDB startup to .bashrc so it starts automatically in new shells
+echo "
+# Start MongoDB if not already running
+if ! pgrep -x \"mongod\" > /dev/null; then
+    echo \"Starting MongoDB...\"
+    nohup mongod --dbpath /data/db &
+    sleep 2
+fi" >> ~/.bashrc
