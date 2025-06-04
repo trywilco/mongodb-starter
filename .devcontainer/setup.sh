@@ -20,19 +20,10 @@ sudo mkdir -p /data/db
 sudo chown -R vscode:vscode /data/db
 
 # Start MongoDB as a background process
-nohup mongod --dbpath /data/db &
+nohup mongod --dbpath /data/db > /tmp/mongodb.log 2>&1 &
 
 # Wait for MongoDB to start
 sleep 5
 
 # Print welcome message
 echo "MongoDB development environment is ready! You can now use 'mongosh' to connect."
-
-# Add MongoDB startup to .bashrc so it starts automatically in new shells
-echo "
-# Start MongoDB if not already running
-if ! pgrep -x \"mongod\" > /dev/null; then
-    echo \"Starting MongoDB...\"
-    nohup mongod --dbpath /data/db &
-    sleep 2
-fi" >> ~/.bashrc
