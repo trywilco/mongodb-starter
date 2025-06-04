@@ -19,8 +19,8 @@ sudo apt-get install -y mongodb-org
 sudo mkdir -p /data/db
 sudo chown -R vscode:vscode /data/db
 
-# Start MongoDB as a background process
-nohup mongod --dbpath /data/db > /tmp/mongodb.log 2>&1 &
+# Start MongoDB as a background process with disown to ensure it stays running
+bash -c "mongod --dbpath /data/db > /tmp/mongodb.log 2>&1 & disown"
 
 # Wait for MongoDB to start
 sleep 5
