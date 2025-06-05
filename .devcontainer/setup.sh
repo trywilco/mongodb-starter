@@ -9,8 +9,14 @@ echo "printf \"\n\n☁️☁️☁️️ Develop in the Cloud ☁️☁️☁️
 
 nohup bash -c "cd /wilco-agent && node agent.js &" >> /tmp/agent.log 2>&1
 
-# Install MongoDB
-curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+# Install MongoDB - check if GPG key exists first
+if [ ! -f "/usr/share/keyrings/mongodb-server-7.0.gpg" ]; then
+    curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+    echo "MongoDB GPG key installed"
+else
+    echo "MongoDB GPG key already exists, skipping..."
+fi
+
 echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org
