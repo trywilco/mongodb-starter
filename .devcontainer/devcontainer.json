@@ -11,9 +11,6 @@
       "onAutoForward": "silent"
       }
   },
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {}
-  },
   "postCreateCommand": ".devcontainer/setup.sh",
   "remoteUser": "vscode"
 }
